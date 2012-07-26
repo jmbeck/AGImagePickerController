@@ -115,8 +115,7 @@
 
 #pragma mark - Private
 
-- (void)centerButtonForInterfaceOrientation:(UIInterfaceOrientation)orientation
-{
+- (void)centerButtonForInterfaceOrientation:(UIInterfaceOrientation)orientation {
     CGRect bounds = [[UIScreen mainScreen] bounds];
     CGFloat width = bounds.size.width;
     CGFloat height = bounds.size.height;
@@ -130,8 +129,7 @@
     self.openButton.frame = frame;
 }
 
-- (void)openAction:(id)sender
-{
+- (void)openAction:(id)sender {
     AGImagePickerController *imagePickerController = [[AGImagePickerController alloc] initWithFailureBlock:^(NSError *error) {
         NSLog(@"Fail. Error: %@", error);
         
@@ -140,7 +138,6 @@
             NSLog(@"User has cancelled.");
             [self dismissModalViewControllerAnimated:YES];
         } else {
-            
             // We need to wait for the view controller to appear first.
             double delayInSeconds = 0.5;
             dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
@@ -150,7 +147,6 @@
         }
         
         [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:YES];
-        
     } andSuccessBlock:^(NSArray *info) {
         [self.selectedPhotos setArray:info];
         

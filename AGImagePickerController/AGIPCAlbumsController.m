@@ -103,7 +103,7 @@
     
     // Navigation Bar Items
     UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancelAction:)];
-	self.navigationItem.leftBarButtonItem = cancelButton;
+	self.navigationItem.rightBarButtonItem = cancelButton;
 	[cancelButton release];
 }
 
@@ -216,7 +216,7 @@
 - (void)reloadData
 {
     [self.tableView reloadData];
-    self.title = NSLocalizedStringWithDefaultValue(@"AGIPC.Albums", nil, [NSBundle mainBundle], @"Albums", nil);
+    self.title = NSLocalizedStringWithDefaultValue(@"AGIPC.Albums", nil, [NSBundle mainBundle], @"My Gallery", nil);
 }
 
 - (void)cancelAction:(id)sender

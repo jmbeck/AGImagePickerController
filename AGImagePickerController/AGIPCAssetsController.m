@@ -229,9 +229,13 @@
     [self loadAssets];
     
     // Navigation Bar Items
+    UIBarButtonItem* cancelButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemCancel target:self action:@selector(cancelAction:)];
+    self.navigationItem.rightBarButtonItem = cancelButtonItem;
+    [cancelButtonItem release];
+    
     UIBarButtonItem *doneButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone target:self action:@selector(doneAction:)];
     doneButtonItem.enabled = NO;
-	self.navigationItem.rightBarButtonItem = doneButtonItem;
+	self.navigationItem.leftBarButtonItem = doneButtonItem;
     [doneButtonItem release];
     
     // Setup toolbar items
@@ -324,7 +328,7 @@
     [self.navigationController setToolbarHidden:[self toolbarHidden] animated:YES];
     
     [self.tableView reloadData];
-    [self setTitle:[self.assetsGroup valueForProperty:ALAssetsGroupPropertyName]];
+    [self setTitle:@"Select Items"];
     [self changeSelectionInformation];
     
     NSInteger totalRows = [self.tableView numberOfRowsInSection:0];
@@ -334,6 +338,11 @@
 
         [self.tableView scrollToRowAtIndexPath:[NSIndexPath indexPathForRow:totalRows-1 inSection:0] atScrollPosition:UITableViewScrollPositionBottom animated:NO];
     }
+}
+
+- (void)cancelAction:(id)sender
+{
+    [self dismissModalViewControllerAnimated:YES];
 }
 
 - (void)doneAction:(id)sender
@@ -387,7 +396,7 @@
 
 - (void)agGridItem:(AGIPCGridItem *)gridItem didChangeNumberOfSelections:(NSNumber *)numberOfSelections
 {
-    self.navigationItem.rightBarButtonItem.enabled = (numberOfSelections.unsignedIntegerValue > 0);
+    self.navigationItem.leftBarButtonItem.enabled = (numberOfSelections.unsignedIntegerValue > 0);
     [self changeSelectionInformation];
 }
 
