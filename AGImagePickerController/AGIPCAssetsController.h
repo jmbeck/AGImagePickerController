@@ -14,12 +14,7 @@
 
 #import "AGIPCGridItem.h"
 
-@interface AGIPCAssetsController : UIViewController<UITableViewDataSource, UITableViewDelegate, AGIPCGridItemDelegate>
-{
-    UITableView *tableView;
-    ALAssetsGroup *assetsGroup;
-    
-    NSMutableArray *assets;
+@interface AGIPCAssetsController : UIViewController<UITableViewDataSource, UITableViewDelegate, AGIPCGridItemDelegate, UIScrollViewDelegate> {
 }
 
 @property (retain) ALAssetsGroup *assetsGroup;

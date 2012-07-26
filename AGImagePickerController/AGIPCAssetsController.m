@@ -21,6 +21,9 @@
 
 @property (nonatomic, retain) NSMutableArray *assets;
 @property (readonly) AGImagePickerController *imagePickerController;
+@property (retain, nonatomic) IBOutlet UIView *customToolbar;
+@property (retain, nonatomic) IBOutlet UIScrollView *customToolbarScroll;
+
 
 @end
 
@@ -53,6 +56,8 @@
 @implementation AGIPCAssetsController
 
 #pragma mark - Properties
+@synthesize customToolbar;
+@synthesize customToolbarScroll;
 
 @synthesize tableView, assetsGroup, assets;
 
@@ -239,11 +244,14 @@
     [doneButtonItem release];
     
     // Setup toolbar items
-    [self setupToolbarItems];
+//    [self setupCustomToolbar];
+    self.navigationController.toolbarHidden = YES;
 }
 
 - (void)viewDidUnload
 {
+    [self setCustomToolbar:nil];
+    [self setCustomToolbarScroll:nil];
     [super viewDidUnload];
     
     // Destroy Notifications
@@ -252,38 +260,11 @@
 
 #pragma mark - Private
 
-- (void)setupToolbarItems
-{
-    if (self.imagePickerController.toolbarItemsForSelection != nil)
-    {
-        NSMutableArray *items = [NSMutableArray array];
-        
-        // Custom Toolbar Items
-        for (id item in self.imagePickerController.toolbarItemsForSelection)
-        {
-            NSAssert([item isKindOfClass:[AGIPCToolbarItem class]], @"Item is not a instance of AGIPCToolbarItem.");
-            
-            ((AGIPCToolbarItem *)item).barButtonItem.target = self;
-            ((AGIPCToolbarItem *)item).barButtonItem.action = @selector(customBarButtonItemAction:);
-            
-            [items addObject:((AGIPCToolbarItem *)item).barButtonItem];
-        }
-        
-        self.toolbarItems = items;
-    } else {
-        // Standard Toolbar Items
-        UIBarButtonItem *selectAll = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringWithDefaultValue(@"AGIPC.SelectAll", nil, [NSBundle mainBundle], @"Select All", nil) style:UIBarButtonItemStyleBordered target:self action:@selector(selectAllAction:)];
-        UIBarButtonItem *flexibleSpace = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
-        UIBarButtonItem *deselectAll = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedStringWithDefaultValue(@"AGIPC.DeselectAll", nil, [NSBundle mainBundle], @"Deselect All", nil) style:UIBarButtonItemStyleBordered target:self action:@selector(deselectAllAction:)];
-        
-        NSArray *toolbarItems = [[NSArray alloc] initWithObjects:selectAll, flexibleSpace, deselectAll, nil];
-        self.toolbarItems = toolbarItems;
-        [toolbarItems release];
-        
-        [selectAll release];
-        [flexibleSpace release];
-        [deselectAll release];
-    }
+- (void)setupCustomToolbar {
+    self.customToolbar.frame = CGRectMake(0, 
+                                            self.view.frame.size.height - self.customToolbar.frame.size.height,
+                                            self.customToolbar.frame.size.width,
+                                            self.customToolbar.frame.size.height);
 }
 
 - (void)loadAssets
@@ -325,7 +306,7 @@
 - (void)reloadData
 {
     // Don't display the select button until all the assets are loaded.
-    [self.navigationController setToolbarHidden:[self toolbarHidden] animated:YES];
+//    [self.navigationController setToolbarHidden:[self toolbarHidden] animated:YES];
     
     [self.tableView reloadData];
     [self setTitle:@"Select Items"];
