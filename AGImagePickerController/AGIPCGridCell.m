@@ -84,6 +84,7 @@
 	for (AGIPCGridItem *gridItem in self.items)
     {	
 		[gridItem setFrame:frame];
+
         UITapGestureRecognizer *selectionGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:gridItem action:@selector(tap)];
         selectionGestureRecognizer.numberOfTapsRequired = 1;
 		[gridItem addGestureRecognizer:selectionGestureRecognizer];

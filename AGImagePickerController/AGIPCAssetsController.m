@@ -179,7 +179,7 @@
     
     AGIPCGridCell *cell = (AGIPCGridCell *)[self.tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     if (cell == nil) 
-    {		        
+    {		       
         cell = [[[AGIPCGridCell alloc] initWithItems:[self itemsForRowAtIndexPath:indexPath] reuseIdentifier:CellIdentifier] autorelease];
     }	
 	else 
@@ -244,7 +244,7 @@
     [doneButtonItem release];
     
     // Setup toolbar items
-//    [self setupCustomToolbar];
+    [self setupCustomToolbar];
     self.navigationController.toolbarHidden = YES;
 }
 
@@ -409,6 +409,14 @@
 - (void)didChangeLibrary:(NSNotification *)notification
 {
     [self.navigationController popToRootViewControllerAnimated:YES];
+}
+
+- (void)agGridItem:(AGIPCGridItem *)gridItem didChangeSelectionState:(NSNumber *)selected {
+    UIButton* previewImageBtn = [UIButton new];
+    UIImage* image = [UIImage imageWithCGImage:[gridItem.asset thumbnail]];
+    UIImageView* imageView = [[UIImageView alloc] initWithImage:image];
+    [previewImageBtn addSubview:imageView];
+    [self.customToolbarScroll addSubview:previewImageBtn];
 }
 
 @end
