@@ -201,7 +201,7 @@
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
-    return YES;
+    return interfaceOrientation == UIInterfaceOrientationPortrait || interfaceOrientation == UIInterfaceOrientationPortraitUpsideDown;
 }
 
 - (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
@@ -422,6 +422,7 @@
         UIButton* previewImageBtn = [UIButton new];
         UIImage* image = [UIImage imageWithCGImage:[gridItem.asset thumbnail]];
         UIImageView* imageView = [[UIImageView alloc] initWithImage:image];
+        imageView.transform = CGAffineTransformScale(imageView.transform, 0.5, 0.5); // Scale down to 1/2 for retina
         [previewImageBtn setImage:image forState:UIControlStateNormal];
         [previewImageBtn addSubview:imageView];
         
