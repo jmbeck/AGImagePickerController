@@ -201,14 +201,7 @@
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
-    return interfaceOrientation == UIInterfaceOrientationPortrait || interfaceOrientation == UIInterfaceOrientationPortraitUpsideDown;
-}
-
-- (void)willRotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration
-{
-    [super willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
-    
-    [self reloadData];
+    return interfaceOrientation == UIInterfaceOrientationPortrait;
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -265,9 +258,10 @@
 #pragma mark - Private
 
 - (void)setupCustomToolbar {
+    int offsetY = 374;
     self.customToolbar.frame = CGRectMake(0, 
-                                            self.view.frame.size.height - self.customToolbar.frame.size.height,
-                                            self.customToolbar.frame.size.width,
+                                            offsetY,
+                                            self.view.frame.size.width,
                                             self.customToolbar.frame.size.height);
 }
 
@@ -427,11 +421,11 @@
         [previewImageBtn addSubview:imageView];
         
         // Offset to the right based on the number of images
-        int offsetX = 10 + (self.selectedAssets.count - 1) * 90;
+        int offsetX = -25 + (self.selectedAssets.count - 1) * 90; // TODO -25 because the coordinate system makes no sense, fixme!
         CGRect previewFrame = previewImageBtn.frame;
-        previewImageBtn.frame = CGRectMake(offsetX, 0, previewFrame.size.width, previewFrame.size.height);
+        previewImageBtn.frame = CGRectMake(offsetX, -40, previewFrame.size.width, previewFrame.size.height); // TODO -40 because the coordinate system makes no sense, fixme!
         
-        self.customToolbarScroll.contentSize = CGSizeMake(offsetX + 90, previewFrame.size.height);
+        self.customToolbarScroll.contentSize = CGSizeMake(offsetX + 120, previewFrame.size.height);
         [self.customToolbarScroll addSubview:previewImageBtn];
         [self.toolbarAssets addObject:gridItem.asset];
         [self.toolbarButtons addObject:previewImageBtn];
@@ -475,7 +469,7 @@
             button.frame = CGRectMake(buttonFrame.origin.x - 90, buttonFrame.origin.y, buttonFrame.size.width, buttonFrame.size.height);
         }
         
-        int contentWidth = 10 + (self.selectedAssets.count - 1) * 90;
+        int contentWidth = 45 + (self.selectedAssets.count - 1) * 90;
         self.customToolbarScroll.contentSize = CGSizeMake(contentWidth, customToolbarScroll.contentSize.height);
         
         [UIView commitAnimations];

@@ -141,11 +141,9 @@ static UIInterfaceOrientation currentInterfaceOrientation;
 
 #pragma mark - View lifecycle
 
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
-    currentInterfaceOrientation = toInterfaceOrientation;
-    
-    return YES;
+    return interfaceOrientation == UIInterfaceOrientationPortrait;
 }
 
 - (void)viewDidLoad
