@@ -20,6 +20,9 @@
 @property (retain) ALAssetsGroup *assetsGroup;
 @property (retain) IBOutlet UITableView *tableView;
 
+@property (nonatomic, retain) NSMutableArray* toolbarAssets;
+@property (nonatomic, retain) NSMutableArray* toolbarButtons;
+
 @property (readonly) NSArray *selectedAssets;
 
 - (id)initWithAssetsGroup:(ALAssetsGroup *)theAssetsGroup;

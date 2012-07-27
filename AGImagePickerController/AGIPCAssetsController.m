@@ -58,6 +58,7 @@
 #pragma mark - Properties
 @synthesize customToolbar;
 @synthesize customToolbarScroll;
+@synthesize toolbarAssets, toolbarButtons;
 
 @synthesize tableView, assetsGroup, assets;
 
@@ -221,6 +222,9 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    self.toolbarAssets = [NSMutableArray new];
+    self.toolbarButtons = [NSMutableArray new];
     
     // Fullscreen
     if (self.imagePickerController.shouldChangeStatusBarStyle) {
@@ -412,11 +416,69 @@
 }
 
 - (void)agGridItem:(AGIPCGridItem *)gridItem didChangeSelectionState:(NSNumber *)selected {
-    UIButton* previewImageBtn = [UIButton new];
-    UIImage* image = [UIImage imageWithCGImage:[gridItem.asset thumbnail]];
-    UIImageView* imageView = [[UIImageView alloc] initWithImage:image];
-    [previewImageBtn addSubview:imageView];
-    [self.customToolbarScroll addSubview:previewImageBtn];
+    
+    if(selected.boolValue) {
+        // Grab the thumbnail from the gridItem
+        UIButton* previewImageBtn = [UIButton new];
+        UIImage* image = [UIImage imageWithCGImage:[gridItem.asset thumbnail]];
+        UIImageView* imageView = [[UIImageView alloc] initWithImage:image];
+        [previewImageBtn setImage:image forState:UIControlStateNormal];
+        [previewImageBtn addSubview:imageView];
+        
+        // Offset to the right based on the number of images
+        int offsetX = 10 + (self.selectedAssets.count - 1) * 90;
+        CGRect previewFrame = previewImageBtn.frame;
+        previewImageBtn.frame = CGRectMake(offsetX, 0, previewFrame.size.width, previewFrame.size.height);
+        
+        self.customToolbarScroll.contentSize = CGSizeMake(offsetX + 90, previewFrame.size.height);
+        [self.customToolbarScroll addSubview:previewImageBtn];
+        [self.toolbarAssets addObject:gridItem.asset];
+        [self.toolbarButtons addObject:previewImageBtn];
+    } else {
+        [UIView beginAnimations:nil context:nil];
+        [UIView setAnimationDuration:0.5];
+        
+        // Remove the UIImageView from the scrollview and shift all the rest down.
+        int deselectedIndex = 0;
+        for(ALAsset* asset in self.toolbarAssets) {
+            if([asset isEqual:gridItem.asset]) {
+                break;
+            }
+            deselectedIndex++;
+        }
+        
+        int i = 0;
+        int removeButtonIndex = -1;
+        UIButton* removeButton = nil;
+        
+        for(UIButton* button in self.toolbarButtons) {
+            if(i < deselectedIndex) {
+                i++;
+                continue;
+            }
+            
+            if(i == deselectedIndex) {
+                removeButtonIndex = i;
+                removeButton = button;
+                break;
+            }
+        }
+        
+        [self.toolbarAssets removeObjectAtIndex:removeButtonIndex];
+        [self.toolbarButtons removeObjectAtIndex:removeButtonIndex];
+        [removeButton removeFromSuperview];
+        
+        for(int i = removeButtonIndex; i < self.toolbarButtons.count; i++) {
+            UIButton* button = [self.toolbarButtons objectAtIndex:i];
+            CGRect buttonFrame = button.frame;
+            button.frame = CGRectMake(buttonFrame.origin.x - 90, buttonFrame.origin.y, buttonFrame.size.width, buttonFrame.size.height);
+        }
+        
+        int contentWidth = 10 + (self.selectedAssets.count - 1) * 90;
+        self.customToolbarScroll.contentSize = CGSizeMake(contentWidth, customToolbarScroll.contentSize.height);
+        
+        [UIView commitAnimations];
+    }
 }
 
 @end
