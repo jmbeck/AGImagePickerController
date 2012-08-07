@@ -427,10 +427,9 @@
         [previewImageBtn setImage:image forState:UIControlStateNormal];
         
         // Offset to the right based on the number of images
-        int offsetX = 0 + (self.selectedAssets.count - 1) * 90; // TODO -25 because the coordinate system makes no sense, fixme!
+        int offsetX = 10 + (self.selectedAssets.count * 90);
         CGRect previewFrame = previewImageBtn.frame;
  
-        // TODO -28 because the coordinate system makes no sense, fixme!
         previewImageBtn.frame = CGRectMake(offsetX, 0,
                                            image.size.width/2, image.size.height/2);
         
@@ -438,14 +437,15 @@
         UIImage* deleteBtnImage = [UIImage imageWithContentsOfFile:deleteBtnPath];
         UIImageView* deleteBtnImageView = [UIImageView new];
         deleteBtnImageView.image = deleteBtnImage;
-        deleteBtnImageView.frame = CGRectMake(112,12,
+        deleteBtnImageView.frame = CGRectMake(117,14,
                                                deleteBtnImage.size.width, deleteBtnImage.size.height);
         deleteBtnImageView.transform = CGAffineTransformScale(deleteBtnImageView.transform, 2, 2);
         
         [previewImageBtn addSubview:deleteBtnImageView];
         [previewImageBtn addTarget:self action:@selector(deleteBtnTapped:) forControlEvents:UIControlEventTouchUpInside];
         
-        self.customToolbarScroll.contentSize = CGSizeMake(offsetX + 120, previewFrame.size.height);
+        int contentWidth = self.selectedAssets.count * 90;
+        self.customToolbarScroll.contentSize = CGSizeMake(contentWidth, previewFrame.size.height);
         [self.customToolbarScroll addSubview:previewImageBtn];
         [self.toolbarAssets addObject:gridItem.asset];
         [self.toolbarButtons addObject:previewImageBtn];
@@ -489,7 +489,7 @@
             button.frame = CGRectMake(buttonFrame.origin.x - 90, buttonFrame.origin.y, buttonFrame.size.width, buttonFrame.size.height);
         }
         
-        int contentWidth = 45 + (self.selectedAssets.count - 1) * 90;
+        int contentWidth = (self.selectedAssets.count - 1) * 90;
         self.customToolbarScroll.contentSize = CGSizeMake(contentWidth, customToolbarScroll.contentSize.height);
         
         [UIView commitAnimations];
@@ -497,7 +497,8 @@
 }
 
 - (IBAction)deleteBtnTapped:(id)sender {
-    [self agGridItem:[self.assets objectAtIndex:[sender tag]] didChangeSelectionState:[NSNumber numberWithBool:NO]];
+    AGIPCGridItem* item = [self.assets objectAtIndex:[sender tag]];
+    [item setSelected:NO];
 }
 
 @end
