@@ -427,7 +427,7 @@
         [previewImageBtn setImage:image forState:UIControlStateNormal];
         
         // Offset to the right based on the number of images
-        int offsetX = 10 + (self.selectedAssets.count * 90);
+        int offsetX = 10 + (self.selectedAssets.count - 1) * 90;
         CGRect previewFrame = previewImageBtn.frame;
  
         previewImageBtn.frame = CGRectMake(offsetX, 0,
@@ -489,7 +489,7 @@
             button.frame = CGRectMake(buttonFrame.origin.x - 90, buttonFrame.origin.y, buttonFrame.size.width, buttonFrame.size.height);
         }
         
-        int contentWidth = (self.selectedAssets.count - 1) * 90;
+        int contentWidth = self.selectedAssets.count * 90;
         self.customToolbarScroll.contentSize = CGSizeMake(contentWidth, customToolbarScroll.contentSize.height);
         
         [UIView commitAnimations];
