@@ -419,29 +419,29 @@
     
     if(selected.boolValue) {
         // Grab the thumbnail from the gridItem
-        UIButton* previewImageBtn = [UIButton new];
-        previewImageBtn.enabled = YES;
-        previewImageBtn.userInteractionEnabled = YES;
+        UIButton* previewImageBtn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
         previewImageBtn.tag = [self.assets indexOfObject:gridItem];
         UIImage* image = [UIImage imageWithCGImage:[gridItem.asset thumbnail]];
-        UIImageView* imageView = [[UIImageView alloc] initWithImage:image];
-        imageView.userInteractionEnabled = YES;
         
-        imageView.transform = CGAffineTransformScale(imageView.transform, 0.5, 0.5); // Scale down to 1/2 for retina
-//        [previewImageBtn setImage:image forState:UIControlStateNormal];
-        [previewImageBtn addSubview:imageView];
+        previewImageBtn.transform = CGAffineTransformScale(previewImageBtn.transform, 0.5, 0.5); // Scale down to 1/2 for retina
+        [previewImageBtn setImage:image forState:UIControlStateNormal];
         
         // Offset to the right based on the number of images
-        int offsetX = -25 + (self.selectedAssets.count - 1) * 90; // TODO -25 because the coordinate system makes no sense, fixme!
+        int offsetX = 0 + (self.selectedAssets.count - 1) * 90; // TODO -25 because the coordinate system makes no sense, fixme!
         CGRect previewFrame = previewImageBtn.frame;
-        previewImageBtn.frame = CGRectMake(offsetX, -28, previewFrame.size.width, previewFrame.size.height); // TODO -28 because the coordinate system makes no sense, fixme!
+ 
+        // TODO -28 because the coordinate system makes no sense, fixme!
+        previewImageBtn.frame = CGRectMake(offsetX, 0,
+                                           image.size.width/2, image.size.height/2);
         
         NSString* deleteBtnPath = [[[NSBundle mainBundle] bundlePath] stringByAppendingString:@"/delete_button@2x.png"];
         UIImage* deleteBtnImage = [UIImage imageWithContentsOfFile:deleteBtnPath];
         UIImageView* deleteBtnImageView = [UIImageView new];
         deleteBtnImageView.image = deleteBtnImage;
-        deleteBtnImageView.frame = CGRectMake(100,30,
+        deleteBtnImageView.frame = CGRectMake(112,12,
                                                deleteBtnImage.size.width, deleteBtnImage.size.height);
+        deleteBtnImageView.transform = CGAffineTransformScale(deleteBtnImageView.transform, 2, 2);
+        
         [previewImageBtn addSubview:deleteBtnImageView];
         [previewImageBtn addTarget:self action:@selector(deleteBtnTapped:) forControlEvents:UIControlEventTouchUpInside];
         
