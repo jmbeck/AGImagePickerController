@@ -243,6 +243,12 @@
     // Setup toolbar items
     [self setupCustomToolbar];
     self.navigationController.toolbarHidden = YES;
+    
+    self.customToolbarScroll.exclusiveTouch = YES;
+    self.customToolbarScroll.userInteractionEnabled = YES;
+    self.customToolbarScroll.canCancelContentTouches = YES;
+    self.customToolbarScroll.delaysContentTouches = YES;
+
 }
 
 - (void)viewDidUnload
@@ -414,16 +420,30 @@
     if(selected.boolValue) {
         // Grab the thumbnail from the gridItem
         UIButton* previewImageBtn = [UIButton new];
+        previewImageBtn.enabled = YES;
+        previewImageBtn.userInteractionEnabled = YES;
+        previewImageBtn.tag = [self.assets indexOfObject:gridItem];
         UIImage* image = [UIImage imageWithCGImage:[gridItem.asset thumbnail]];
         UIImageView* imageView = [[UIImageView alloc] initWithImage:image];
+        imageView.userInteractionEnabled = YES;
+        
         imageView.transform = CGAffineTransformScale(imageView.transform, 0.5, 0.5); // Scale down to 1/2 for retina
-        [previewImageBtn setImage:image forState:UIControlStateNormal];
+//        [previewImageBtn setImage:image forState:UIControlStateNormal];
         [previewImageBtn addSubview:imageView];
         
         // Offset to the right based on the number of images
         int offsetX = -25 + (self.selectedAssets.count - 1) * 90; // TODO -25 because the coordinate system makes no sense, fixme!
         CGRect previewFrame = previewImageBtn.frame;
-        previewImageBtn.frame = CGRectMake(offsetX, -40, previewFrame.size.width, previewFrame.size.height); // TODO -40 because the coordinate system makes no sense, fixme!
+        previewImageBtn.frame = CGRectMake(offsetX, -28, previewFrame.size.width, previewFrame.size.height); // TODO -28 because the coordinate system makes no sense, fixme!
+        
+        NSString* deleteBtnPath = [[[NSBundle mainBundle] bundlePath] stringByAppendingString:@"/delete_button@2x.png"];
+        UIImage* deleteBtnImage = [UIImage imageWithContentsOfFile:deleteBtnPath];
+        UIImageView* deleteBtnImageView = [UIImageView new];
+        deleteBtnImageView.image = deleteBtnImage;
+        deleteBtnImageView.frame = CGRectMake(100,30,
+                                               deleteBtnImage.size.width, deleteBtnImage.size.height);
+        [previewImageBtn addSubview:deleteBtnImageView];
+        [previewImageBtn addTarget:self action:@selector(deleteBtnTapped:) forControlEvents:UIControlEventTouchUpInside];
         
         self.customToolbarScroll.contentSize = CGSizeMake(offsetX + 120, previewFrame.size.height);
         [self.customToolbarScroll addSubview:previewImageBtn];
@@ -474,6 +494,10 @@
         
         [UIView commitAnimations];
     }
+}
+
+- (IBAction)deleteBtnTapped:(id)sender {
+    [self agGridItem:[self.assets objectAtIndex:[sender tag]] didChangeSelectionState:[NSNumber numberWithBool:NO]];
 }
 
 @end
