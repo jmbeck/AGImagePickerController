@@ -202,7 +202,7 @@
             void (^assetGroupEnumberatorFailure)(NSError *) = ^(NSError *error) {
                 NSLog(@"A problem occured. Error: %@", error.localizedDescription);
                 [((AGImagePickerController *)self.navigationController) performSelector:@selector(didFail:) withObject:error];
-            };	
+            };
             
             [[AGImagePickerController defaultAssetsLibrary] enumerateGroupsWithTypes:ALAssetsGroupAll
                                    usingBlock:assetGroupEnumerator 
