@@ -449,6 +449,14 @@
         [self.customToolbarScroll addSubview:previewImageBtn];
         [self.toolbarAssets addObject:gridItem.asset];
         [self.toolbarButtons addObject:previewImageBtn];
+        
+        int contentOffsetX = contentWidth - self.customToolbarScroll.frame.size.width;
+        if(contentOffsetX > 0) {
+            [UIView beginAnimations:nil context:nil];
+            [UIView setAnimationDuration:0.5];
+            self.customToolbarScroll.contentOffset = CGPointMake(contentOffsetX, 0);
+            [UIView commitAnimations];
+        }
     } else {
         [UIView beginAnimations:nil context:nil];
         [UIView setAnimationDuration:0.5];
